@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Security;
 /**
  * Controller that implements posts API
  *
- * @author Konstantin Laktionov <konstantin.laktionov@orbitsoft.com>
+ * @author Konstantin Laktionov <Starternh@gmail.com>
  * @package App\Controller
  */
 class PostsController extends JsonApiController
@@ -33,8 +33,6 @@ class PostsController extends JsonApiController
     protected $security;
 
     /**
-     * BonusGroupsController constructor
-     *
      * @param JsonApiServiceInterface $jsonApiService
      * @param LoggerInterface $logger
      * @param Security $security
@@ -65,6 +63,7 @@ class PostsController extends JsonApiController
      */
     public function create(Request $request)
     {
+        dump(666); exit();
         $apiRequest = $this->jsonApiService->parseRequest($request);
         /* @var $post Post */
         $post = $apiRequest->getBody()->data;
