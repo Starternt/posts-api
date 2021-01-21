@@ -3,3 +3,4 @@
 /var/
 
 /config/packages/doctrine.yaml
+/config/services.yaml
