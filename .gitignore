@@ -1,3 +1,5 @@
 .idea
 /vendor
 /var/
+
+/config/packages/doctrine.yaml

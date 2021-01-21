@@ -7,6 +7,7 @@ vault {
   }
 }
 
-exec {
-  command = "php-fpm"
+template {
+  source = "/var/www/html/config/packages/doctrine.yaml.tpl"
+  destination = "/var/www/html/config/packages/doctrine.yaml"
 }
