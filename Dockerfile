@@ -35,4 +35,4 @@ ENV LOG_LEVEL=WARNING
 ENV CLUSTER=production
 
 ENTRYPOINT ["entry-point"]
-CMD ["consul-template", "-config", "/etc/consul-template/conf.hcl"]
+CMD ["consul-template", "-config", "/etc/consul-template/conf.hcl", "-exec", "php-fpm"]
