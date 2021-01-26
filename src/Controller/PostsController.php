@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Dto\Post;
 use App\Utils\JsonApi\JsonApiErrorsTrait;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -63,8 +64,9 @@ class PostsController extends JsonApiController
      */
     public function create(Request $request)
     {
-        dump(666); exit();
         $apiRequest = $this->jsonApiService->parseRequest($request);
+        dump(666); exit();
+
         /* @var $post Post */
         $post = $apiRequest->getBody()->data;
 
