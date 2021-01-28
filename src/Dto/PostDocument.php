@@ -17,8 +17,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class PostDocument
 {
     /**
-     * @var Post
-     * @Content(type="App\Dto\Post")
+     * @var PostDto
+     * @Content(type="App\Dto\PostDto",
+     *     loaders={
+     *      @Reva2\JsonApi\Annotations\Loader(loader="App\Loader\PostLoader:create", group="CreatePost")
+     *     })
      * @Assert\NotBlank()
      * @Assert\Valid()
      */

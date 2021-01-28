@@ -31,3 +31,9 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    App\Utils\DataMappers\ContentMapper:
+        arguments:
+
+    App\Utils\DataMappers\PostMapper:
+        arguments:
+            - '@App\Utils\DataMappers\ContentMapper'

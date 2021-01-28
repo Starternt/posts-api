@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use App\Dto\Post;
+use App\Dto\PostDto;
+use App\Service\PostsService;
 use App\Utils\JsonApi\JsonApiErrorsTrait;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -34,19 +35,27 @@ class PostsController extends JsonApiController
     protected $security;
 
     /**
+     * @var PostsService
+     */
+    protected $service;
+
+    /**
      * @param JsonApiServiceInterface $jsonApiService
      * @param LoggerInterface $logger
      * @param Security $security
+     * @param PostsService $service
      */
     public function __construct(
         JsonApiServiceInterface $jsonApiService,
         LoggerInterface $logger,
-        Security $security
+        Security $security,
+        PostsService $service
     ) {
         parent::__construct($jsonApiService);
 
         $this->logger = $logger;
         $this->security = $security;
+        $this->service = $service;
     }
 
     /**
@@ -62,16 +71,15 @@ class PostsController extends JsonApiController
      * @return Response
      * @throws Exception
      */
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         $apiRequest = $this->jsonApiService->parseRequest($request);
-        dump(666); exit();
 
-        /* @var $post Post */
+        /* @var $post PostDto */
         $post = $apiRequest->getBody()->data;
 
-        $this->service->create($post);
+        $postDto = $this->service->create($post);
 
-        // return $this->buildEmptyResponse($apiRequest, Response::HTTP_NO_CONTENT);
+        return $this->buildContentResponse($apiRequest, $postDto);
     }
 }

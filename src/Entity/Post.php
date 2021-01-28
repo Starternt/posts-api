@@ -1,71 +1,76 @@
 <?php
 
-namespace App\Dto;
+namespace App\Entity;
 
+use DateTimeImmutable;
 use DateTimeInterface;
-use Reva2\JsonApi\Annotations\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Reva2\JsonApi\Annotations\Id;
-use Reva2\JsonApi\Annotations\Relationship;
 
 /**
- * Post DTO
+ * Post entity
  *
  * @author Konstantin Laktionov <Starternh@gmail.com>
- * @package App\Dto
+ * @package App\Entity
  *
- * @ApiResource(name="posts")
+ * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
+ * @ORM\Table(name="posts")
  */
 class Post
 {
     /**
-     * Post ID
-     *
      * @var string
+     *
+     * @ORM\Id()
+     * @ORM\Column(type="uuid")
      * @Id()
      */
     protected $id;
 
     /**
      * @var string
-     * @Assert\NotBlank()
-     * @Assert\Length(
-     *     max=250,
-     *     maxMessage="Title can not be longer than {{limit}} characters."
-     * )
-     * @Attribute()
+     * @ORM\Column(type="string", length=250)
      */
     protected $title;
 
     /**
      * @var string
-     * 
+     * @ORM\Column(type="string", name="createdBy", length=36)
      */
     protected $createdBy;
 
     /**
      * @var int
+     * @ORM\Column(type="integer")
      */
     protected $rating;
 
     /**
      * @var DateTimeInterface
+     * @ORM\Column(type="datetime_immutable", name="createdAt")
      */
     protected $createdAt;
 
     /**
      * @var DateTimeInterface
+     * @ORM\Column(type="datetime", name="updatedAt")
      */
     protected $updatedAt;
 
     /**
      * @var Content[]
-     * @Assert\Type(type="array")
-     * @Assert\Valid(traverse=true)
-     * @Relationship(
-     *     type="App\Dto\Content[]"
-     * )
+     * @ORM\OneToMany(targetEntity="Content", mappedBy="post", orphanRemoval=true, cascade={"all"})
      */
     protected $content;
+
+    /**
+     * Constructor and initializes collections
+     */
+    public function __construct()
+    {
+        $this->content = new ArrayCollection();
+    }
 
     /**
      * @return string
@@ -148,9 +153,9 @@ class Post
     }
 
     /**
-     * @return DateTimeInterface
+     * @return DateTimeImmutable
      */
-    public function getCreatedAt(): DateTimeInterface
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -188,11 +193,11 @@ class Post
     }
 
     /**
-     * @return Content[]|null
+     * @return Content[]
      */
-    public function getContent(): ?array
+    public function getContent(): array
     {
-        return $this->content;
+        return $this->content->toArray();
     }
 
     /**
@@ -202,7 +207,10 @@ class Post
      */
     public function setContent(array $content): Post
     {
-        $this->content = $content;
+        foreach ($content as $contentItem) {
+            $contentItem->setPost($this);
+            $this->content->add($contentItem);
+        }
 
         return $this;
     }

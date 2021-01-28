@@ -1,80 +1,65 @@
 <?php
 
-namespace App\Dto;
+namespace App\Entity;
 
-use DateTimeInterface;
-use Reva2\JsonApi\Annotations\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
 use Reva2\JsonApi\Annotations\Id;
-use Reva2\JsonApi\Annotations\Relationship;
 
 /**
- * Content DTO
+ * Content entity
  *
  * @author Konstantin Laktionov <Starternh@gmail.com>
- * @package App\Dto
+ * @package App\Entity
  *
- * @ApiResource(name="content")
+ * @ORM\Entity()
+ * @ORM\Table(name="content")
  */
 class Content
 {
-    const TYPE_TEXT = 'text';
-    const TYPE_IMAGE = 'image';
-    const TYPE_VIDEO = 'video';
-
     /**
-     * Content ID
-     *
      * @var string
+     *
+     * @ORM\Id()
+     * @ORM\Column(type="uuid")
      * @Id()
      */
     protected $id;
 
     /**
      * @var Post
-     * @Assert\NotBlank()
-     * @Relationship(
-     *     type="App\Dto\Post"
-     * )
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="content")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
      */
     protected $post;
 
     /**
      * @var string
-     * @Assert\NotBlank()
-     * @Assert\Choice(
-     *     choices={"text","image","video"}, message="Invalid content type."
-     * )
-     * @Attribute()
+     * @ORM\Column(type="string", name="type", columnDefinition="enum('text','image','video')")
      */
-    protected $type = self::TYPE_TEXT;
+    protected $type;
 
     /**
-     * @var
-     * 
+     * @var string|null
+     * @ORM\Column(type="string", name="imageId", length=36)
      */
-    protected $image;
+    protected $imageId;
 
     /**
-     * @var string
-     * @Assert\Length(
-     *     max=5000,
-     *     maxMessage="Body can not be longer than {{limit}} characters."
-     * )
-     * @Attribute()
+     * @var string|null
+     * @ORM\Column(type="string")
      */
     protected $body;
 
     /**
      * @var int
-     * @Assert\NotBlank()
-     * @Attribute()
+     * @ORM\Column(type="integer", name="position")
      */
-    protected $position = 1;
+    protected $position;
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getId(): ?string
+    public function getId(): string
     {
         return $this->id;
     }
@@ -92,9 +77,9 @@ class Content
     }
 
     /**
-     * @return Post|null
+     * @return Post
      */
-    public function getPost(): ?Post
+    public function getPost(): Post
     {
         return $this->post;
     }
@@ -132,27 +117,27 @@ class Content
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getImage()
+    public function getImageId(): ?string
     {
-        return $this->image;
+        return $this->imageId;
     }
 
     /**
-     * @param mixed $image
+     * @param string|null $imageId
      *
      * @return Content
      */
-    public function setImage($image)
+    public function setImageId(?string $imageId): Content
     {
-        $this->image = $image;
+        $this->imageId = $imageId;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getBody(): ?string
     {
@@ -160,11 +145,11 @@ class Content
     }
 
     /**
-     * @param string $body
+     * @param string|null $body
      *
      * @return Content
      */
-    public function setBody(string $body): Content
+    public function setBody(?string $body): Content
     {
         $this->body = $body;
 

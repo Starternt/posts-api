@@ -23,6 +23,8 @@ doctrine:
         mapping_types:
             enum: string
         persistent: true
+        types:
+            uuid: Ramsey\Uuid\Doctrine\UuidType
 
     orm:
         auto_generate_proxy_classes: true
