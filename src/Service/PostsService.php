@@ -3,10 +3,15 @@
 namespace App\Service;
 
 use App\Dto\PostDto;
+use App\Dto\PostsListParams;
 use App\Dto\UserDto;
+use App\Entity\Post;
+use App\Repository\PostRepository;
 use App\Utils\DataMappers\PostMapper;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
@@ -45,6 +50,11 @@ class PostsService
     protected $mapper;
 
     /**
+     * @var PostRepository
+     */
+    protected $repository;
+
+    /**
      * Constructor
      *
      * @param EntityManagerInterface $em
@@ -62,6 +72,45 @@ class PostsService
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
         $this->mapper = $mapper;
+        $this->repository = $this->em->getRepository(Post::class);
+    }
+
+    /**
+     * Returns post with specified ID
+     *
+     * @param string $id
+     *
+     * @return null|PostDto
+     */
+    public function get(string $id)
+    {
+        /** @var Post|null $post */
+        $post = $this->repository->find($id);
+
+        if (null === $post) {
+            return null;
+        }
+
+        return $this->mapper->toDto($post);
+    }
+
+    /**
+     * Returns list of posts according to specified params
+     *
+     * @param PostsListParams $params
+     *
+     * @return PostDto[]
+     */
+    public function getList(PostsListParams $params): array
+    {
+        $postsDto = [];
+        $posts = $this->repository->getList($params);
+
+        foreach ($posts as $post) {
+            $postsDto[] = $this->mapper->toDto($post);
+        }
+
+        return $postsDto;
     }
 
     /**
@@ -91,5 +140,19 @@ class PostsService
 
             throw $e;
         }
+    }
+
+    /**
+     * Returns total number of posts according to specified params
+     *
+     * @param PostsListParams $params
+     *
+     * @return int
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function getCount(PostsListParams $params): int
+    {
+        return $this->repository->getCount($params);
     }
 }
