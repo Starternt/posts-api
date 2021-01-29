@@ -2,6 +2,7 @@
 
 namespace App\Dto;
 
+use App\Validator\MatchValue;
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
@@ -28,6 +29,8 @@ class PostDto
      *
      * @var string
      * @Id()
+     * @Assert\NotBlank(groups={"UpdatePost"})
+     * @MatchValue(parameter="id", groups={"UpdatePost"})
      */
     protected $id;
 

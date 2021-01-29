@@ -207,6 +207,7 @@ class Post
      */
     public function setContent(array $content): Post
     {
+        $this->content->clear();
         foreach ($content as $contentItem) {
             $contentItem->setPost($this);
             $this->content->add($contentItem);

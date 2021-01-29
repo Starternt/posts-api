@@ -3,7 +3,9 @@
 namespace App\Utils\DataMappers;
 
 use App\Dto\ContentDto;
+use App\Dto\PostDto;
 use App\Entity\Content;
+use App\Entity\Post;
 
 /**
  * Data mapper for content
@@ -29,7 +31,7 @@ class ContentMapper
                 ->setId($contentDtoItem->getId())
                 ->setImageId($contentDtoItem->getImage())
                 ->setBody($contentDtoItem->getBody())
-                ->setType($contentDtoItem->getType())
+                ->setType($contentDtoItem->getContentType())
                 ->setPosition($contentDtoItem->getPosition());
             $content[] = $contentItem;
         }
@@ -53,12 +55,45 @@ class ContentMapper
                 ->setId($contentItem->getId())
                 ->setImage($contentItem->getImageId())
                 ->setBody($contentItem->getBody())
-                ->setType($contentItem->getType())
+                ->setContentType($contentItem->getType())
                 ->setPosition($contentItem->getPosition());
 
             $contentDto[] = $contentDtoItem;
         }
 
         return $contentDto;
+    }
+
+    /**
+     * @param Post $post
+     * @param PostDto $postDto
+     *
+     * @return array
+     */
+    public function updateContent(Post $post, PostDto $postDto): array
+    {
+        $contentMap = [];
+        foreach ($post->getContent() as $contentItem) {
+            $contentMap[(string)$contentItem->getId()] = $contentItem;
+        }
+
+        $content = [];
+        foreach ($postDto->getContent() as $contentItem) {
+            if (array_key_exists((string)$contentItem->getId(), $contentMap)) {
+                $updatingContent = $contentMap[(string)$contentItem->getId()];
+            } else {
+                $updatingContent = (new Content())->setId($contentItem->getId());
+            }
+
+            $updatingContent
+                ->setType($contentItem->getContentType())
+                ->setBody($contentItem->getBody())
+                ->setPosition($contentItem->getPosition())
+                ->setImageId($contentItem->getImage());
+
+            $content[] = $updatingContent;
+        }
+
+        return $content;
     }
 }

@@ -33,9 +33,9 @@ class ContentSchema extends SchemaProvider
     public function getAttributes($resource): array
     {
         return [
-            'type'     => $resource->getType(),
-            'body'     => $resource->getBody(),
-            'position' => $resource->getPosition(),
+            'contentType' => $resource->getContentType(),
+            'body'        => $resource->getBody(),
+            'position'    => $resource->getPosition(),
         ];
     }
 

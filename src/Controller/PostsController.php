@@ -115,7 +115,7 @@ class PostsController extends JsonApiController
      *
      * @Route("/v1/posts", methods={"POST"}, name="posts.create")
      * @ApiRequest(
-     *     query="App\Dto\Bonuses\PostParams",
+     *     query="App\Dto\PostParams",
      *     body="App\Dto\PostDocument",
      *     serialization={"Default", "CreatePost"}, validation={"Default", "CreatePost"}
      * )
@@ -142,8 +142,8 @@ class PostsController extends JsonApiController
      *
      * @Route("/v1/posts/{id}", methods={"PATCH"}, name="posts.update", requirements={"id"="[0-9a-zA-z-]+"})
      * @ApiRequest(
-     *     query="App\Dto\Bonuses\PostParams",
-     *     body="App\Dto\Bonuses\PostDocument",
+     *     query="App\Dto\PostParams",
+     *     body="App\Dto\PostDocument",
      *     serialization={"Default", "UpdatePost"}, validation={"Default", "UpdatePost"}
      * )
      *

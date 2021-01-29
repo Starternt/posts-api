@@ -2,12 +2,12 @@
 
 namespace App\Dto;
 
-use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
 use Reva2\JsonApi\Annotations\ApiResource;
 use Reva2\JsonApi\Annotations\Id;
 use Reva2\JsonApi\Annotations\Relationship;
 use Symfony\Component\Validator\Constraints as Assert;
+use Reva2\JsonApi\Annotations\Attribute;
 
 /**
  * Content DTO
@@ -33,7 +33,6 @@ class ContentDto
 
     /**
      * @var PostDto
-     * @Assert\NotBlank(groups={"UpdatePost"})
      * @Relationship(
      *     type="App\Dto\PostDto"
      * )
@@ -48,7 +47,7 @@ class ContentDto
      * )
      * @Attribute()
      */
-    protected $type = self::TYPE_TEXT;
+    protected $contentType = self::TYPE_TEXT;
 
     /**
      * @var
@@ -57,7 +56,7 @@ class ContentDto
     protected $image;
 
     /**
-     * @var string|null
+     * @var string
      * @Assert\Length(
      *     max=5000,
      *     maxMessage="Body can not be longer than {{limit}} characters."
@@ -125,19 +124,19 @@ class ContentDto
     /**
      * @return string
      */
-    public function getType(): string
+    public function getContentType(): string
     {
-        return $this->type;
+        return $this->contentType;
     }
 
     /**
-     * @param string $type
+     * @param string $contentType
      *
      * @return ContentDto
      */
-    public function setType(string $type): ContentDto
+    public function setContentType(string $contentType): ContentDto
     {
-        $this->type = $type;
+        $this->contentType = $contentType;
 
         return $this;
     }

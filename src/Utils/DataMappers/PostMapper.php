@@ -72,4 +72,18 @@ class PostMapper
             ->setUpdatedAt($post->getUpdatedAt())
             ->setContent($this->contentMapper->toContentDto($post->getContent()));
     }
+
+    /**
+     * Update post entity fields
+     *
+     * @param Post $post
+     * @param PostDto $postDto
+     *
+     * @throws Exception
+     */
+    public function updatePost(Post $post, PostDto $postDto)
+    {
+        $post->setTitle($postDto->getTitle());
+        $post->setContent($this->contentMapper->updateContent($post, $postDto));
+    }
 }

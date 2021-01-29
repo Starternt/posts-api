@@ -80,6 +80,21 @@ class PostsService
      *
      * @param string $id
      *
+     * @return null|Post
+     */
+    public function find(string $id): ?Post
+    {
+        /** @var Post $post */
+        $post = $this->repository->find($id);
+
+        return $post;
+    }
+
+    /**
+     * Returns post with specified ID
+     *
+     * @param string $id
+     *
      * @return null|PostDto
      */
     public function get(string $id)
@@ -132,6 +147,33 @@ class PostsService
             $this->em->persist($post);
             $this->em->flush();
 
+            $this->em->commit();
+
+            return $this->mapper->toDto($post);
+        } catch (Exception $e) {
+            $this->em->rollback();
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Update specified post
+     *
+     * @param PostDto $postDto
+     * @param Post $post
+     *
+     * @return PostDto
+     * @throws Exception
+     */
+    public function update(PostDto $postDto, Post $post): PostDto
+    {
+        try {
+            $this->em->beginTransaction();
+
+            $this->mapper->updatePost($post, $postDto);
+
+            $this->em->flush();
             $this->em->commit();
 
             return $this->mapper->toDto($post);
