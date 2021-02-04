@@ -1,4 +1,4 @@
-{{$cluster := or (env "SAAS_CLUSTER") "production"}}
+{{$cluster := or (env "CLUSTER") "production"}}
 
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
@@ -8,6 +8,9 @@
 
 parameters:
     app.environment: '%env(resolve:APP_ENV)%'
+    {{ range $idx, $node := service (printf "%s.kafka" $cluster)}}
+    kafka.host: '{{ $node.Address }}'
+    kafka.port: {{ $node.Port }}{{end}}
 
 services:
     # default configuration for services in *this* file
@@ -37,3 +40,8 @@ services:
     App\Utils\DataMappers\PostMapper:
         arguments:
             - '@App\Utils\DataMappers\ContentMapper'
+
+    App\Command\PostVoteCommand:
+        arguments:
+            - '%kafka.host%'
+            - '%kafka.port%'
