@@ -56,7 +56,7 @@ class PostVoteCommand extends Command
      * @param string $kafkaPort
      * @param EntityManagerInterface $em
      */
-    public function __construct(string $kafkaHost, string $kafkaPort, EntityManagerInterface $em)
+    public function __construct(string $kafkaHost = '', string $kafkaPort = '', EntityManagerInterface $em)
     {
         parent::__construct();
 
@@ -74,8 +74,6 @@ class PostVoteCommand extends Command
         $consumer = $this->configureConsumer($this->kafkaHost, $this->kafkaPort);
         $consumer->start(
             function ($topic, $part, $message) {
-                dump(666);
-
                 $postId = $message['message']['key'];
                 $value = $message['message']['value'];
 
