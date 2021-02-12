@@ -28,7 +28,8 @@ final class Version20210126003831 extends AbstractMigration
                   `body` text COMMENT \'content body\',
                   `position` int (3) NOT NULL DEFAULT 1 COMMENT \'position of content which determine order\',
                   UNIQUE KEY `UQ_ImageId` (`imageId`),
-                  PRIMARY KEY (`id`)
+                  PRIMARY KEY (`id`),
+                  CONSTRAINT `FK_Content_Posts` FOREIGN KEY (`postId`) REFERENCES `posts` (`id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT=\'Content table\';'
         );
     }
