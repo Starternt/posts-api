@@ -120,7 +120,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
     {
         $error = $this->createJsonApiError(
             (string)Response::HTTP_UNAUTHORIZED,
-            'a3357f6a-7623-42c4-99a6-7b42488564f0',
+            'f4113e94-d8b3-4050-90af-f720b417d6f8',
             'Authorization required',
             'Invalid token'
         );
