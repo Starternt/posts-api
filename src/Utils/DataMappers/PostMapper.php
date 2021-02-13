@@ -5,6 +5,7 @@ namespace App\Utils\DataMappers;
 use App\Dto\PostDto;
 use App\Dto\UserDto;
 use App\Entity\Post;
+use App\Entity\User;
 use Exception;
 
 /**
@@ -36,16 +37,16 @@ class PostMapper
      * Convert DTO to post entity
      *
      * @param PostDto $postDto
+     * @param User $user
      *
      * @return Post
-     * @throws Exception
      */
-    public function toEntity(PostDto $postDto): Post
+    public function toEntity(PostDto $postDto, User $user): Post
     {
         return (new Post())
             ->setId($postDto->getId())
             ->setTitle($postDto->getTitle())
-            ->setCreatedBy($postDto->getCreatedBy()->getId())
+            ->setCreatedBy($user)
             ->setRating($postDto->getRating())
             ->setCreatedAt($postDto->getCreatedAt())
             ->setUpdatedAt($postDto->getUpdatedAt())
@@ -61,7 +62,7 @@ class PostMapper
      */
     public function toDto(Post $post): PostDto
     {
-        $createdBy = (new UserDto())->setId($post->getId());
+        $createdBy = (new UserDto())->setId($post->getCreatedBy()->getId());
 
         return (new PostDto())
             ->setId($post->getId())

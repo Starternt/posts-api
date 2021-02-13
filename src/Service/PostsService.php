@@ -148,10 +148,7 @@ class PostsService
         try {
             $this->em->beginTransaction();
 
-            $createdBy = (new UserDto())->setId($this->security->getUser()->getId());
-            $postDto->setCreatedBy($createdBy);
-
-            $post = $this->mapper->toEntity($postDto);
+            $post = $this->mapper->toEntity($postDto, $this->security->getUser());
 
             $this->em->persist($post);
             $this->em->flush();

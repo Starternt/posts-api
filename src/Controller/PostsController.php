@@ -152,6 +152,7 @@ class PostsController extends JsonApiController
      */
     public function update(Request $request, string $id): Response
     {
+        // TODO add checking user rights to update a post
         $post = $this->service->find($id);
         if (null === $post) {
             throw $this->createNotFoundException(sprintf("Post #%d not found", $id));
