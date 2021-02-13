@@ -7,9 +7,11 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
-            lazy: true
-            provider: users_in_memory
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\JwtTokenAuthenticator
+                entry_point: App\Security\JwtTokenAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

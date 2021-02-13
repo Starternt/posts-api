@@ -41,6 +41,13 @@ class Post
     protected $createdBy;
 
     /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
      * @var int
      * @ORM\Column(type="integer")
      */
@@ -128,6 +135,26 @@ class Post
     public function setCreatedBy(string $createdBy): Post
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Post
+     */
+    public function setUser(User $user): Post
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -16,6 +16,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Service for posts
@@ -55,24 +56,32 @@ class PostsService
     protected $repository;
 
     /**
+     * @var Security
+     */
+    private $security;
+
+    /**
      * Constructor
      *
      * @param EntityManagerInterface $em
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface $logger
      * @param PostMapper $mapper
+     * @param Security $security
      */
     public function __construct(
         EntityManagerInterface $em,
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
-        PostMapper $mapper
+        PostMapper $mapper,
+        Security $security
     ) {
         $this->em = $em;
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
         $this->mapper = $mapper;
         $this->repository = $this->em->getRepository(Post::class);
+        $this->security = $security;
     }
 
     /**
@@ -139,7 +148,7 @@ class PostsService
         try {
             $this->em->beginTransaction();
 
-            $createdBy = (new UserDto())->setId(Uuid::uuid4()); // TODO remove after auth realization
+            $createdBy = (new UserDto())->setId($this->security->getUser()->getId());
             $postDto->setCreatedBy($createdBy);
 
             $post = $this->mapper->toEntity($postDto);
