@@ -38,20 +38,4 @@ class ContentSchema extends SchemaProvider
             'position'    => $resource->getPosition(),
         ];
     }
-
-    // /** TODO */
-    //  * @inheritdoc
-    //  */
-    // public function getRelationships($resource, $isPrimary, array $includeRelationships): array
-    // {
-    //     /* @var $resource ContentDto */
-    //     $relationships = [];
-    //     if (in_array('image', $includeRelationships)) {
-    //         $relationships = [
-    //             'image' => [self::DATA => $resource->getImage()],
-    //         ];
-    //     }
-    //
-    //     return $relationships;
-    // }
 }
