@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Dto\PostDto;
 use App\Dto\PostsListParams;
-use App\Dto\UserDto;
 use App\Entity\Post;
 use App\Repository\PostRepository;
 use App\Utils\DataMappers\PostMapper;
@@ -13,9 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Exception;
-use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -34,18 +30,6 @@ class PostsService
     protected $em;
 
     /**
-     * Event dispatcher
-     *
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var PostMapper
      */
     protected $mapper;
@@ -61,24 +45,16 @@ class PostsService
     private $security;
 
     /**
-     * Constructor
-     *
      * @param EntityManagerInterface $em
-     * @param EventDispatcherInterface $dispatcher
-     * @param LoggerInterface $logger
      * @param PostMapper $mapper
      * @param Security $security
      */
     public function __construct(
         EntityManagerInterface $em,
-        EventDispatcherInterface $dispatcher,
-        LoggerInterface $logger,
         PostMapper $mapper,
         Security $security
     ) {
         $this->em = $em;
-        $this->dispatcher = $dispatcher;
-        $this->logger = $logger;
         $this->mapper = $mapper;
         $this->repository = $this->em->getRepository(Post::class);
         $this->security = $security;
@@ -88,13 +64,18 @@ class PostsService
      * Returns post with specified ID
      *
      * @param string $id
+     * @param string $userId
      *
      * @return null|Post
      */
-    public function find(string $id): ?Post
+    public function find(string $id, string $userId = ''): ?Post
     {
         /** @var Post $post */
-        $post = $this->repository->find($id);
+        if (null !== $userId) {
+            $post = $this->repository->findOneBy(['id' => $id, 'createdBy' => $userId]);
+        } else {
+            $post = $this->repository->find($id);
+        }
 
         return $post;
     }
@@ -106,7 +87,7 @@ class PostsService
      *
      * @return null|PostDto
      */
-    public function get(string $id)
+    public function get(string $id): ?PostDto
     {
         /** @var Post|null $post */
         $post = $this->repository->find($id);

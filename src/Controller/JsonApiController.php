@@ -56,47 +56,7 @@ abstract class JsonApiController
     }
 
     /**
-     * Creates response for newly created resource (with HTTP code 201 and 'location' header)
-     *
-     * @param RequestInterface $request
-     * @param mixed $resource
-     * @param mixed|null $metadata
-     * @param array|null $links
-     * @param array $headers
-     *
-     * @return Response
-     */
-    protected function buildCreatedResponse(
-        RequestInterface $request,
-        $resource,
-        $metadata = null,
-        array $links = null,
-        array $headers = []
-    ): Response {
-        return $this->jsonApiService
-            ->getResponseFactory($request)
-            ->getCreatedResponse($resource, $links, $metadata, $headers);
-    }
-
-    /**
-     * Creates empty response
-     *
-     * @param RequestInterface $request
-     * @param int $code
-     * @param array $headers
-     *
-     * @return Response
-     */
-    protected function buildEmptyResponse(
-        RequestInterface $request,
-        $code = Response::HTTP_NO_CONTENT,
-        array $headers = []
-    ): Response {
-        return $this->jsonApiService->getResponseFactory($request)->getCodeResponse($code, $headers);
-    }
-
-    /**
-     * Creates response with JSON API Error in body
+     * Creates response with JSON API Error
      *
      * @param RequestInterface $request
      * @param ErrorInterface|ErrorInterface[]|ErrorCollection $errors
@@ -109,25 +69,6 @@ abstract class JsonApiController
         RequestInterface $request,
         $errors,
         $code = Response::HTTP_BAD_REQUEST,
-        array $headers = []
-    ): Response {
-        return $this->jsonApiService->getResponseFactory($request)->getErrorResponse($errors, $code, $headers);
-    }
-
-    /**
-     * Create response with `not found` JSON API Error in body
-     *
-     * @param RequestInterface $request
-     * @param ErrorInterface|ErrorInterface[]|ErrorCollection $errors
-     * @param int $code
-     * @param array $headers
-     *
-     * @return Response
-     */
-    protected function buildNotFoundErrorResponse(
-        RequestInterface $request,
-        $errors,
-        $code = Response::HTTP_NOT_FOUND,
         array $headers = []
     ): Response {
         return $this->jsonApiService->getResponseFactory($request)->getErrorResponse($errors, $code, $headers);

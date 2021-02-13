@@ -42,21 +42,15 @@ class PostsController extends JsonApiController
 
     /**
      * @param JsonApiServiceInterface $jsonApiService
-     * @param LoggerInterface $logger
-     * @param Security $security
      * @param PostsService $service
+     * @param Security $security
      */
-    public function __construct(
-        JsonApiServiceInterface $jsonApiService,
-        LoggerInterface $logger,
-        Security $security,
-        PostsService $service
-    ) {
+    public function __construct(JsonApiServiceInterface $jsonApiService, PostsService $service, Security $security)
+    {
         parent::__construct($jsonApiService);
 
-        $this->logger = $logger;
-        $this->security = $security;
         $this->service = $service;
+        $this->security = $security;
     }
 
     /**
@@ -152,8 +146,7 @@ class PostsController extends JsonApiController
      */
     public function update(Request $request, string $id): Response
     {
-        // TODO add checking user rights to update a post
-        $post = $this->service->find($id);
+        $post = $this->service->find($id, (string)$this->security->getUser()->getId());
         if (null === $post) {
             throw $this->createNotFoundException(sprintf("Post #%d not found", $id));
         }
